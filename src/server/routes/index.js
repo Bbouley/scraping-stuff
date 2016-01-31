@@ -27,25 +27,9 @@ router.get('/meetinginfo', function(req, res, next) {
             return el.trim();
         })
         var cleanArray = trimArray.filter(Boolean);
-        console.log(cleanArray);
-        // console.log(splitOnLines)
-        // var noSpaces = noTags.replace(/\s\s+/g, ' ')
-        // console.log(noSpaces)
-        // res.json(noTags.trim())
+        res.send(cleanArray);
     })
-    // driver.quit();
-
-
-
-    // url = 'http://www.daccaa.org/query.asp';
-
-    // var pageData = request(url, function(err, res, html) {
-    //     if(!err) {
-    //         var page = cheerio.load(html);
-    //         console.log(page.html())
-    //         return page ;
-    //     }
-    // });
+    driver.quit();
 })
 
 module.exports = router;
