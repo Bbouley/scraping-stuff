@@ -17,9 +17,23 @@ router.get('/', function(req, res, next) {
 router.get('/meetinginfo', function(req, res, next) {
     driver.get('http://www.daccaa.org/meetings.htm');
     // driver.click('name="cmdFindMeetings"');
-    var searchMeetings = driver.findElement(webdriver.By.name('cmdFindMeetings'));
-    console.log(searchMeetings.click());
-    driver.quit();
+    driver.findElement(webdriver.By.name('cmdFindMeetings')).click();
+    driver.getPageSource().then(function(source) {
+        var sourceString = source.toString()
+        var reg = /<td[^>]*>([\s\S]*?)<\/td>/
+        var noTags = sourceString.replace(/<(?:.|\n)*?>/gm, '');
+        var splitOnLines = noTags.split('\n');
+        var trimArray = splitOnLines.map(function(el) {
+            return el.trim();
+        })
+        var cleanArray = trimArray.filter(Boolean);
+        console.log(cleanArray);
+        // console.log(splitOnLines)
+        // var noSpaces = noTags.replace(/\s\s+/g, ' ')
+        // console.log(noSpaces)
+        // res.json(noTags.trim())
+    })
+    // driver.quit();
 
 
 
