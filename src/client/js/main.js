@@ -1,16 +1,17 @@
 // add scripts
-
 $(document).on('ready', function() {
 
     // var onlyPlaces;
 
     var myMap;
+
     function initMap() {
       myMap = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 39.7392, lng: -104.9903},
         zoom: 10
       });
     }
+
     initMap();
 
     $('.getAll').on('click', function(e) {
@@ -39,22 +40,34 @@ $(document).on('ready', function() {
             });
 
             timeAddressObjects.splice(1134, 7);
-            // console.log(timeAddressObjects[0])
             var object1 = timeAddressObjects[0]
+            // var geocoder = new google.maps.Geocoder();
 
-            var geocoder = new google.maps.Geocoder();
+            var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=' + key + '';
 
-            console.log(makeAddress(object1));
+            function createURL (addressObject) {
+                var baseURL = 'https://maps.googleapis.com/maps/api/geocode/json?address='
+                var streetNum = addressObject.street.split(' ')[0];
+                var streetName1 = addressObject.street.split(' ')[1];
+                var streetName2 = addressObject.street.split(' ')[2];
+                var area = addressObject.area;
+                var endURL = ',+CO&key=' + key;
+                console.log(baseURL + streetNum + '+' + streetName1 + '+' streetName2 + ',+' + area + endURL)
+            }
+
+            console.log(createURL(object1));
+
+            // $.get(createURL(object1), function(response) {
+            //     console.log(response);
+            // });
 
             function addLocation(geocoder, map, addressObject) {
+                var address = makeAddress(addressObject)
                 geocoder.geocode({'address' : makeAddress(addressObject)}), function(results, status) {
-                    console.log('testing1');
-                    console.log(results, status);
                     if(status === google.maps.GeocoderStatus.OK) {
-                        console.log('testing2');
                         map.setCenter(results[0].geometry.location);
                          var marker = new google.maps.Marker({
-                            map : map,
+                            map : myMap,
                             position : results[0].geometry.location,
                             title : addressObject.name + ' ' + addressObject.time
                         });
@@ -64,7 +77,7 @@ $(document).on('ready', function() {
                 }
             }
 
-            addLocation(geocoder, myMap, object1)
+            // addLocation(geocoder, myMap, object1)
         });
 
     });
