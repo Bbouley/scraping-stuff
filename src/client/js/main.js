@@ -61,16 +61,30 @@ $(document).on('ready', function() {
                     url : createURL(addressObject),
                     type : 'GET'
                 }).done(function(data) {
-                    console.log(data.results);
+                    var content
                     var marker = new google.maps.Marker({
                         map : myMap,
                         position : data.results[0].geometry.location,
-                        title : addressObject.name + ' ' + addressObject.time
+                    });
+                    marker.info = new google.maps.InfoWindow({
+                        content: '<h4>' + addressObject.name + ' ' + addressObject.time + '</h4>\n' + '<h4>' + addressObject.day + '</h4>' + '<p>' + addressObject.street + ' ,' + addressObject.area + '</p>'
+                    });
+                    google.maps.event.addListener(marker, 'click', function() {
+                        marker.info.open(myMap, marker);
                     });
                 });
             };
 
             newMarker(object1);
+
+            function placeObjects (array) {
+                for (var i = 0; i < array.length ; i++) {
+                    newMarker(array[i])
+                };
+                console.log(array.length)
+            }
+
+            placeObjects(timeAddressObjects);
 
             function addLocation(geocoder, map, addressObject) {
                 var address = makeAddress(addressObject)
