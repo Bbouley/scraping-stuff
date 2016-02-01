@@ -52,14 +52,25 @@ $(document).on('ready', function() {
                 var streetName2 = addressObject.street.split(' ')[2];
                 var area = addressObject.area;
                 var endURL = ',+CO&key=' + key;
-                console.log(baseURL + streetNum + '+' + streetName1 + '+' streetName2 + ',+' + area + endURL)
+                return baseURL + streetNum + '+' + streetName1 + '+' + streetName2 + ',+' + area + endURL
             }
 
-            console.log(createURL(object1));
 
-            // $.get(createURL(object1), function(response) {
-            //     console.log(response);
-            // });
+            function newMarker(addressObject) {
+                $.ajax({
+                    url : createURL(addressObject),
+                    type : 'GET'
+                }).done(function(data) {
+                    console.log(data.results);
+                    var marker = new google.maps.Marker({
+                        map : myMap,
+                        position : data.results[0].geometry.location,
+                        title : addressObject.name + ' ' + addressObject.time
+                    });
+                });
+            };
+
+            newMarker(object1);
 
             function addLocation(geocoder, map, addressObject) {
                 var address = makeAddress(addressObject)
