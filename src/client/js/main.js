@@ -105,23 +105,23 @@ function checkMarkers (marker, latlng, text) {
     var allMarkers = mc.getMarkers();
 
   //check to see if any of the existing markers match the latlng of the new marker
-  if (allMarkers.length != 0) {
-    for (i=0; i < allMarkers.length; i++) {
-      var existingMarker = allMarkers[i];
-      var pos = existingMarker.getPosition();
+    if (allMarkers.length != 0) {
+      for (i=0; i < allMarkers.length; i++) {
+          var existingMarker = allMarkers[i];
+          var pos = existingMarker.getPosition();
 
       if (latlng.equals(pos)) {
-        text = text + "\n\n\n" + allMarkers[i].info.content;
+          text = text + "\n\n\n" + allMarkers[i].info.content;
       }
     }
   }
 
   google.maps.event.addListener(marker, 'click', function() {
-    infowindow.close();
-    infowindow.setContent(text);
-    infowindow.open(map, marker);
+      infowindow.close();
+      infowindow.setContent(text);
+      infowindow.open(map, marker);
   });
-  mc.addMarker(marker);
+      mc.addMarker(marker);
   return marker;
 }
 
