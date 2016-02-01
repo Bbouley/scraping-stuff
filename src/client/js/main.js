@@ -1,4 +1,9 @@
 // add scripts
+
+var markers = [];
+var mc;
+var infowindow = new google.maps.InfoWindow();
+
 $(document).on('ready', function() {
 
     // var onlyPlaces;
@@ -17,6 +22,9 @@ $(document).on('ready', function() {
     $('.getAll').on('click', function(e) {
         e.preventDefault();
 
+        var mcOptions = {maxZoom: 12};
+        mc = new MarkerClusterer(myMap, [], mcOptions);
+
         $.get('/meetinginfo', function(data) {
             var newArray = data.splice(14)
             var chunk_size = 7;
@@ -26,8 +34,6 @@ $(document).on('ready', function() {
             .filter(function(e){
                 return e;
             });
-
-            // console.log(groups);
 
             var timeAddressObjects = groups.map(function(el, index) {
                 return {
@@ -41,7 +47,6 @@ $(document).on('ready', function() {
 
             timeAddressObjects.splice(1134, 7);
             var object1 = timeAddressObjects[0]
-            // var geocoder = new google.maps.Geocoder();
 
             var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=' + key + '';
 
@@ -69,13 +74,9 @@ $(document).on('ready', function() {
                     marker.info = new google.maps.InfoWindow({
                         content: '<h4>' + addressObject.name + ' ' + addressObject.time + '</h4>\n' + '<h4>' + addressObject.day + '</h4>' + '<p>' + addressObject.street + ' ,' + addressObject.area + '</p>'
                     });
-                    google.maps.event.addListener(marker, 'click', function() {
-                        marker.info.open(myMap, marker);
-                    });
+                    checkMarkers(marker, marker.position, marker.info.content)
                 });
             };
-
-            newMarker(object1);
 
             function placeObjects (array) {
                 for (var i = 0; i < array.length ; i++) {
@@ -86,23 +87,9 @@ $(document).on('ready', function() {
 
             placeObjects(timeAddressObjects);
 
-            function addLocation(geocoder, map, addressObject) {
-                var address = makeAddress(addressObject)
-                geocoder.geocode({'address' : makeAddress(addressObject)}), function(results, status) {
-                    if(status === google.maps.GeocoderStatus.OK) {
-                        map.setCenter(results[0].geometry.location);
-                         var marker = new google.maps.Marker({
-                            map : myMap,
-                            position : results[0].geometry.location,
-                            title : addressObject.name + ' ' + addressObject.time
-                        });
-                    } else {
-                        console.log('Geocode Unsuccessful: ' + status);
-                    }
-                }
-            }
-
-            // addLocation(geocoder, myMap, object1)
+            setTimeout (function() {
+                var mc = new MarkerClusterer(myMap, markers);
+            }, 3000)
         });
 
     });
@@ -112,4 +99,31 @@ function makeAddress (object) {
 }
 
 });
+
+
+function checkMarkers (marker, latlng, text) {
+    var allMarkers = mc.getMarkers();
+
+  //check to see if any of the existing markers match the latlng of the new marker
+  if (allMarkers.length != 0) {
+    for (i=0; i < allMarkers.length; i++) {
+      var existingMarker = allMarkers[i];
+      var pos = existingMarker.getPosition();
+
+      if (latlng.equals(pos)) {
+        text = text + "\n\n\n" + allMarkers[i].info.content;
+      }
+    }
+  }
+
+  google.maps.event.addListener(marker, 'click', function() {
+    infowindow.close();
+    infowindow.setContent(text);
+    infowindow.open(map, marker);
+  });
+  mc.addMarker(marker);
+  return marker;
+}
+
+
 
