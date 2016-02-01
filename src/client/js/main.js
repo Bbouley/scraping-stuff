@@ -6,8 +6,6 @@ var infowindow = new google.maps.InfoWindow();
 
 $(document).on('ready', function() {
 
-    // var onlyPlaces;
-
     var myMap;
 
     function initMap() {
@@ -94,11 +92,14 @@ $(document).on('ready', function() {
 
     });
 
+});
+
+// *** Helper FUnctions *** //
+
+
 function makeAddress (object) {
     return (object.street + ', ' + object.area + ', CO').toString();
 }
-
-});
 
 
 function checkMarkers (marker, latlng, text) {

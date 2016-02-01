@@ -16,7 +16,6 @@ router.get('/', function(req, res, next) {
 
 router.get('/meetinginfo', function(req, res, next) {
     driver.get('http://www.daccaa.org/meetings.htm');
-    // driver.click('name="cmdFindMeetings"');
     driver.findElement(webdriver.By.name('cmdFindMeetings')).click();
     driver.getPageSource().then(function(source) {
         var sourceString = source.toString()
