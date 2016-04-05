@@ -45,8 +45,8 @@ $(document).on('ready', function() {
 
             timeAddressObjects.splice(1134, 7);
             // var object1 = timeAddressObjects[0]
-            console.log(timeAddressObjects);
-            addToDB(timeAddressObjects);
+            console.log(JSON.stringify(timeAddressObjects));
+            // addToDB(timeAddressObjects);
 
             var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=' + key + '';
 

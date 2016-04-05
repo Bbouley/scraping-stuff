@@ -6,6 +6,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var swig = require('swig');
+var mongoose = require('mongoose-q')(require('mongoose'));
 
 
 // *** routes *** //
@@ -21,6 +22,8 @@ var swig = new swig.Swig();
 app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
 
+// *** Mongo connection *** //
+mongoose.connect('mongodb://localhost/meetings-list');
 
 // *** static directory *** //
 app.set('views', path.join(__dirname, 'views'));

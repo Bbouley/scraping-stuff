@@ -2,19 +2,9 @@ var express = require('express');
 var router = express.Router();
 var request = require('request');
 var cheerio = require('cheerio');
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+var mongoose = require('mongoose-q')(require('mongoose'));
+var Meeting = require('../models/meetings');
 
-var Meeting = new Schema({
-    name : String,
-    day : String,
-    time : String,
-    street : String,
-    area : String
-});
-
-mongoose.model('meetings', Meeting);
-mongoose.connect('mongodb://localhost/meetings-list');
 
 var webdriver = require('selenium-webdriver'),
     By = require('selenium-webdriver').By,
@@ -47,7 +37,15 @@ router.get('/meetinginfo', function(req, res, next) {
 });
 
 router.post('/add', function(req, res, next) {
-
+    var meeting = new Meeting(req.body);
+    meeting.saveQ()
+    .then(function (meeting) {
+        res.json(meeting);
+    })
+    .catch(function(err) {
+        res.json(err);
+    })
+    .done();
 });
 
 module.exports = router;

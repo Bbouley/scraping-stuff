@@ -2,3 +2,4 @@ node_modules/
 .DS_Store
 npm-debug.log
 src/client/js/keys.js
+src/server/meetings-object.js
